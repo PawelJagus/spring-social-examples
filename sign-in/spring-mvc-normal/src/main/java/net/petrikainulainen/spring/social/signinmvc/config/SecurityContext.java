@@ -14,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.social.security.SpringSocialConfigurer;
 
@@ -38,6 +41,7 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 //Configures form login
                 .formLogin()
                     .loginPage("/login")
@@ -101,4 +105,12 @@ public class SecurityContext extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService() {
         return new RepositoryUserDetailsService(userRepository);
     }
+    
+    @Bean
+	public ProviderSignInUtils providerSignInUtils(
+			final ConnectionFactoryLocator connectionFactoryLocator,
+			final UsersConnectionRepository usersConnectionRepository) {
+		return new ProviderSignInUtils(connectionFactoryLocator,
+				usersConnectionRepository);
+	}
 }

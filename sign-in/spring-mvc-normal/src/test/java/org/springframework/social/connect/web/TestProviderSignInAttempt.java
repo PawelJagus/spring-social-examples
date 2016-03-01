@@ -2,6 +2,7 @@ package org.springframework.social.connect.web;
 
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.UsersConnectionRepository;
+import org.springframework.social.connect.ConnectionFactoryLocator;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,29 +16,20 @@ public class TestProviderSignInAttempt extends ProviderSignInAttempt {
 
     private Set<String> connections = new HashSet<>();
 
-    private boolean usersConnectionRepositorySet = false;
-
-    public TestProviderSignInAttempt(Connection<?> connection, UsersConnectionRepository usersConnectionRepository) {
-        super(connection, null, usersConnectionRepository);
+    public TestProviderSignInAttempt(Connection<?> connection) {
+        super(connection);
         this.connection = connection;
-
-        if (usersConnectionRepository != null) {
-            this.usersConnectionRepositorySet = true;
-        }
     }
 
     @Override
-    public Connection<?> getConnection() {
+    public Connection<?> getConnection(final ConnectionFactoryLocator connectionFactoryLocator) {
         return connection;
     }
 
-    @Override
+    /*@Override
     void addConnection(String userId) {
         connections.add(userId);
-        if (usersConnectionRepositorySet) {
-            super.addConnection(userId);
-        }
-    }
+    }*/
 
     public Set<String> getConnections() {
         return connections;

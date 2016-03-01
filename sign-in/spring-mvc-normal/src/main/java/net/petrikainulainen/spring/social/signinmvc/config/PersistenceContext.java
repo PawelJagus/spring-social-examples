@@ -4,7 +4,10 @@ import com.jolbox.bonecp.BoneCPDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -83,4 +86,18 @@ public class PersistenceContext {
 
         return entityManagerFactoryBean;
     }
+    
+    @Bean
+	public DataSourceInitializer databasePopulator(final DataSource dataSource) {
+		ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+		populator
+				.addScript(new ClassPathResource(
+						"org/springframework/social/connect/jdbc/JdbcUsersConnectionRepository.sql"));
+		populator.setContinueOnError(true);
+
+		DataSourceInitializer initializer = new DataSourceInitializer();
+		initializer.setDatabasePopulator(populator);
+		initializer.setDataSource(dataSource);
+		return initializer;
+	}
 }

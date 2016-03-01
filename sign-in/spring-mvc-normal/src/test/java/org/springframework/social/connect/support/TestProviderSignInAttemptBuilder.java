@@ -130,6 +130,6 @@ public class TestProviderSignInAttemptBuilder {
 
         Connection connection = new TestConnection(connectionData, userProfile);
 
-        return new TestProviderSignInAttempt(connection, usersConnectionRepository);
+        return new TestProviderSignInAttempt(connection);
     }
 }
